@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/feelinc/dataloader/example"
+	"github.com/feelinc/go-dataloader/example"
 )
 
 // UserLoaderConfig captures the config to create a new UserLoader

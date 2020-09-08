@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/feelinc/dataloader/pkg/generator"
+	"github.com/feelinc/go-dataloader/pkg/generator"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/feelinc/dataloader
+module github.com/feelinc/go-dataloader
 
 go 1.14
 
