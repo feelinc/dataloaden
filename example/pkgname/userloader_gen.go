@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/vektah/dataloaden/example"
+	"github.com/feelinc/dataloader/example"
 )
 
 // UserLoaderConfig captures the config to create a new UserLoader

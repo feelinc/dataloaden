@@ -18,7 +18,7 @@ func TestUserLoader(t *testing.T) {
 	dl := &UserLoader{
 		wait:     10 * time.Millisecond,
 		maxBatch: 5,
-		fetch: func(keys []string) ([]*User, []error) {
+		fetch: func(keys []string, params ...[]interface{}) ([]*User, []error) {
 			mu.Lock()
 			fetches = append(fetches, keys)
 			mu.Unlock()
@@ -30,7 +30,14 @@ func TestUserLoader(t *testing.T) {
 				if strings.HasPrefix(key, "E") {
 					errors[i] = fmt.Errorf("user not found")
 				} else {
-					users[i] = &User{ID: key, Name: "user " + key}
+					paramsStr := make([]string, len(params[i]))
+					if len(params[i]) > 0 {
+						for j := range params[i] {
+							paramsStr[j] = fmt.Sprintf("%v", params[i][j])
+						}
+					}
+
+					users[i] = &User{ID: key, Name: "user " + key, Params: paramsStr}
 				}
 			}
 			return users, errors
@@ -40,9 +47,11 @@ func TestUserLoader(t *testing.T) {
 	t.Run("fetch concurrent data", func(t *testing.T) {
 		t.Run("load user successfully", func(t *testing.T) {
 			t.Parallel()
-			u, err := dl.Load("U1")
+			u, err := dl.Load("U1", "param-a", "param-b")
 			require.NoError(t, err)
 			require.Equal(t, u.ID, "U1")
+			require.Equal(t, u.Params[0], "param-a")
+			require.Equal(t, u.Params[1], "param-b")
 		})
 
 		t.Run("load failed user", func(t *testing.T) {
@@ -54,9 +63,11 @@ func TestUserLoader(t *testing.T) {
 
 		t.Run("load many users", func(t *testing.T) {
 			t.Parallel()
-			u, err := dl.LoadAll([]string{"U2", "E2", "E3", "U4"})
+			u, err := dl.LoadAll([]string{"U2", "E2", "E3", "U4"}, "param-c", "param-d")
 			require.Equal(t, u[0].Name, "user U2")
+			require.Equal(t, u[0].Params[0], "param-c")
 			require.Equal(t, u[3].Name, "user U4")
+			require.Equal(t, u[3].Params[1], "param-d")
 			require.Error(t, err[1])
 			require.Error(t, err[2])
 		})

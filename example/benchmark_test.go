@@ -13,7 +13,7 @@ func BenchmarkLoader(b *testing.B) {
 	dl := &UserLoader{
 		wait:     500 * time.Nanosecond,
 		maxBatch: 100,
-		fetch: func(keys []string) ([]*User, []error) {
+		fetch: func(keys []string, params ...[]interface{}) ([]*User, []error) {
 			users := make([]*User, len(keys))
 			errors := make([]error, len(keys))
 

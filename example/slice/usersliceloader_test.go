@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/feelinc/dataloader/example"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/vektah/dataloaden/example"
 )
 
 func TestUserLoader(t *testing.T) {
@@ -19,7 +19,7 @@ func TestUserLoader(t *testing.T) {
 	dl := &UserSliceLoader{
 		wait:     10 * time.Millisecond,
 		maxBatch: 5,
-		fetch: func(keys []int) (users [][]example.User, errors []error) {
+		fetch: func(keys []int, params ...[]interface{}) (users [][]example.User, errors []error) {
 			mu.Lock()
 			fetches = append(fetches, keys)
 			mu.Unlock()
